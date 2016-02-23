@@ -2,3 +2,7 @@
 
 builds/
 packer_cache/
+
+*.*~
+**/*.*~
+*.box
