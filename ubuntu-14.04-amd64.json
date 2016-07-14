@@ -1,8 +1,31 @@
 {
+  "push" : {
+    "name" : "",
+    "vcs" : true
+  },
   "variables": {
     "atlas_username": "{{env `ATLAS_USERNAME`}}",
     "atlas_name": "{{env `ATLAS_NAME`}}"
   },
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant'|sudo -S sh '{{.Path}}'",
+      "override": {
+         "virtualbox-iso": {
+           "scripts": [
+             "scripts/base.sh",
+             "scripts/system.sh",
+             "scripts/vagrant.sh",
+             "scripts/python.sh",
+             "scripts/virtualbox.sh",
+             "scripts/docker.sh",
+             "scripts/cleanup.sh"
+           ]
+         }
+      }
+    }
+  ],
   "builders": [
     {
       "boot_command": [
@@ -59,14 +82,13 @@
           "1"
         ]
       ],
-      "virtualbox_version_file": ".vbox_version",
-      "vm_name": "packer-ubuntu-14.04-amd64"
+      "virtualbox_version_file": ".vbox_version"
     }
   ],
-  "post-processors": [
+  "post-processors": [[
     {
-      "output": "builds/ubuntu-14.04.box",
-      "type": "vagrant"
+      "type": "vagrant",
+      "keep_input_artifact": false
     },
     {
       "type": "atlas",
@@ -75,27 +97,8 @@
       "artifact_type": "vagrant.box",
       "metadata" : {
         "provider" : "virtualbox",
-        "version"  : "1.0.2"
+        "version"  : "1.0.0"
       }
     }
-  ],
-  "provisioners": [
-        {
-            "execute_command": "echo 'vagrant'|sudo -S sh '{{.Path}}'",
-            "override": {
-                "virtualbox-iso": {
-                    "scripts": [
-                        "scripts/base.sh",
-                        "scripts/system.sh",
-                        "scripts/vagrant.sh",
-                        "scripts/python.sh",
-                        "scripts/virtualbox.sh",
-                        "scripts/docker.sh",
-                        "scripts/cleanup.sh"
-                    ]
-                }
-            },
-            "type": "shell"
-        }
-    ]
+  ]]
 }
